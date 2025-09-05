@@ -45,9 +45,7 @@ def troca_unidade(navegador, unidade):
         navegador.find_element(By.XPATH, f"{UNIDADES[unidade]['XPATH_TOPO']}").click()
 
 def anexar_arquivo(mutuario, navegador_sei):
-    # try:
-    #     print('SEI mutuario')
-    #     print(mutuario['NUMERO_SEI'])
+    try:
         navegador_sei.get(_LINK_SEI)
         navegador_sei.find_element(By.ID, objetos_site['ID_USUARIO']).send_keys(dados_de_acesso['USUARIO'])
         sleep(1)
@@ -62,21 +60,22 @@ def anexar_arquivo(mutuario, navegador_sei):
         navegador_sei.find_element(By.ID, objetos_site['ID_BOTAO']).click()
         sleep(3)
         unidade_atual = navegador_sei.find_element(By.XPATH, '//*[@id="divInfraBarraSistemaPadraoD"]/div[3]').text
-        print('unidade_atual')
-        print(unidade_atual)
-        print('Unidade do SEI')
+        # print('unidade_atual')
+        # print(unidade_atual)
+        # print('Unidade do SEI')
         unidade_sei = mutuario['UNIDADE']
-        print(unidade_sei)
-        print(UNIDADES[unidade_sei])
-        print(type(UNIDADES[unidade_sei]))
+        # print(unidade_sei)
+        # print(UNIDADES[unidade_sei])
+        # print(type(UNIDADES[unidade_sei]))
         # print(UNIDADES[mutuario['UNIDADE']['textoUnidade']])
 
         if unidade_atual == UNIDADES[unidade_sei]['textoUnidade']:
-            print(f'Buscando em: {unidade_atual}')
+            pass
         else:
             troca_unidade(navegador_sei, mutuario['UNIDADE'])
         unidade_atual = navegador_sei.find_element(By.XPATH, '//*[@id="divInfraBarraSistemaPadraoD"]/div[3]').text
-        print(unidade_atual)
+        print(f'Buscando em: {unidade_atual}')
+        print(f"{mutuario['NUMERO_SEI']} - {mutuario['NOME']}")
         if len(navegador_sei.find_elements(By.CLASS_NAME, 'sparkling-modal-frame')) > 0:
             iframe = navegador_sei.find_element(By.NAME, 'modal-frame')
             navegador_sei.switch_to.frame(iframe)
@@ -99,16 +98,22 @@ def anexar_arquivo(mutuario, navegador_sei):
         select.select_by_visible_text('Anexo')
         sleep(2)
         WebDriverWait(navegador_sei, 5).until(EC.presence_of_element_located((By.XPATH, objetos_site['XPATH_SEL_NATO']))).click()
+        sleep(2)
         WebDriverWait(navegador_sei, 5).until(EC.presence_of_element_located((By.ID, objetos_site['ID_CAMPO_DATA']))).send_keys(f'{DATA}')
+        sleep(2)
         WebDriverWait(navegador_sei, 5).until(EC.presence_of_element_located((By.ID, objetos_site['ID_CAMPO_ARVORE']))).send_keys(f'RECEITA_{mutuario['NOME']}')
+        sleep(2)
         WebDriverWait(navegador_sei, 5).until(EC.presence_of_element_located((By.ID, objetos_site['ID_INFORMAR_ARQUIVO']))).send_keys(mutuario['COMPROVANTE'])
+        sleep(2)
         WebDriverWait(navegador_sei, 5).until(EC.presence_of_element_located((By.XPATH, objetos_site['XPATH_SEL_PUBLICO']))).click()
-        # input('✅ Hora de conferência')
+        sleep(2)
         WebDriverWait(navegador_sei, 5).until(EC.presence_of_element_located((By.ID, objetos_site['ID_BOTAO_SALVAR']))).click()
+        sleep(2)
+        # input('✅ Hora de conferência')
         # navegador_sei.quit()
-    # except (ValueError, TypeError) as e:
-    #     print('❌ Erro ao anexar arquivo')
-    #     navegador_sei.quit()
-    #     print(f"Erro: {e}")
+    except (ValueError, TypeError) as e:
+        print('❌ Erro ao anexar arquivo')
+        # navegador_sei.quit()
+        print(f"Erro: {e}")
 
 # anexar_receita(navegador_sei, NOME, comprovante, DATA)
